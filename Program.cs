@@ -105,7 +105,7 @@ public class JsonHandler<T> where T : class
 
     public void JsonConsoleOutput(List<T> list)
     {
-        string jsonString = JsonSerializer.Serialize(list, options);
+        string jsonString = File.ReadAllText(fileName);
 
         Console.WriteLine(jsonString);
     }
