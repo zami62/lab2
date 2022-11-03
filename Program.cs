@@ -3,7 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 public class Part
 {
@@ -71,7 +70,7 @@ public class JsonHandler<T> where T : class
         }
         else
         {
-            Console.WriteLine("Destination file is not empty");
+            Console.WriteLine("Specified path file is not empty");
         }
     }
 
@@ -98,16 +97,21 @@ public class JsonHandler<T> where T : class
             }
             else
             {
-                Console.WriteLine("Destination file is empty");
+                Console.WriteLine("Specified path file is empty");
             }
         }
     }
 
-    public void JsonConsoleOutput(List<T> list)
+    public void OutputJsonContents()
     {
         string jsonString = File.ReadAllText(fileName);
 
         Console.WriteLine(jsonString);
+    }
+
+    public void OutputSerializedList(List<T> list)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(list, options));
     }
 }
 
@@ -117,17 +121,15 @@ class Program
 {
     static void Main(string[] args)
     {
-        var partsDict = new List<Part>();
+        List<Part> partsList = new List<Part>();
 
-        var partHandler = new JsonHandler<Part>("partsFile.json");
+        JsonHandler<Part> partsHandler = new JsonHandler<Part>("partsFile.json");
 
-        //partsDict.Add(new Part("Shaft", 0.5f, new Vector3(30, 40, 50), new Material("440C", 7.8f, 8f)));
-        //partsDict.Add(new Part("Hub", 0.5f, new Vector3(50, 20, 60), new Material("AISI321", 7.8f, 10f)));
-        //partsDict.Add(new Part("Impeller", 0.5f, new Vector3(60, 60, 30), new Material("AISI304", 7.8f, 12f)));
+        partsList.Add(new Part("Shaft", 0.5f, new Vector3(30, 40, 50), new Material("440C", 7.8f, 8f)));
+        partsList.Add(new Part("Hub", 0.5f, new Vector3(50, 20, 60), new Material("AISI321", 7.8f, 10f)));
+        partsList.Add(new Part("Impeller", 0.5f, new Vector3(60, 60, 30), new Material("AISI304", 7.8f, 12f)));
 
-        //partHandler.Rewrite(partsDict);
-
-        partHandler.Read(ref partsDict);
-        partHandler.JsonConsoleOutput(partsDict);
+        partsHandler.Rewrite(partsList);
+        partsHandler.OutputJsonContents();
     }
 }
